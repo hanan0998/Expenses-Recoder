@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/transactions.dart';
 import 'package:intl/intl.dart';
+import './chartBar_widget.dart';
 
 class ChartWidget extends StatelessWidget {
   List<Transactions> recentTransaction;
@@ -24,20 +25,55 @@ class ChartWidget extends StatelessWidget {
             totalSum += recentTransaction[i].amount;
           }
         }
-        print(DateFormat.E().format(weekDay));
-        print(totalSum);
-        return {"day": DateFormat.E().format(weekDay), "amount": totalSum};
+
+        return {
+          "day": DateFormat.E().format(weekDay).substring(0, 1),
+          "amount": totalSum
+        };
       },
-    );
+    ).reversed.toList();
+  }
+
+  double get maxSpending {
+    return groupedTransactionValues.fold(0.0, (sum, element) {
+      return sum + element['amount'];
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    print(groupedTransactionValues);
+    // print(groupedTransactionValues);
+    // print(name.substring(0, 1));
     return Card(
-      elevation: 6,
-      margin: EdgeInsets.all(20),
-      // child: ,
-    );
+        elevation: 10,
+        margin: EdgeInsets.symmetric(horizontal: 50, vertical: 20),
+        child: Container(
+          height: 150,
+          width: 50,
+          // padding: EdgeInsets.all(20),
+          // color: Colors.grey,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+
+            // padding: EdgeInsets.all(20),
+            itemBuilder: (context, index) {
+              return Flexible(
+                fit: FlexFit.tight,
+                child: Container(
+                  margin: EdgeInsets.symmetric(vertical: 10),
+                  child: ChartBarWidget(
+                      groupedTransactionValues[index]['day'],
+                      groupedTransactionValues[index]['amount'],
+                      maxSpending == 0
+                          ? 0.0
+                          : (groupedTransactionValues[index]['amount']
+                                  as double) /
+                              maxSpending),
+                ),
+              );
+            },
+            itemCount: 7,
+          ),
+        ));
   }
 }

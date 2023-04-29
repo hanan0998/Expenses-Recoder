@@ -4,12 +4,13 @@ import 'package:intl/intl.dart';
 
 class TranactionWidget extends StatelessWidget {
   final List<Transactions> _userTransactions;
-  TranactionWidget(@required this._userTransactions);
+  final Function delete;
+  TranactionWidget(@required this._userTransactions, @required this.delete);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 400,
+      height: 500,
       child: _userTransactions.isEmpty
           ? Column(
               children: <Widget>[
@@ -33,40 +34,32 @@ class TranactionWidget extends StatelessWidget {
               itemBuilder: (context, index) {
                 // Transactions tx = _userTransactions[index];
                 return Card(
-                  child: Row(
-                    children: <Widget>[
-                      Container(
-                        margin:
-                            EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-                        child: Text(
-                          "\$${_userTransactions[index].amount.toStringAsFixed(2)}",
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Theme.of(context).primaryColor,
-                          ),
-                        ),
-                        // decoration of container
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                              color: Theme.of(context).primaryColor, width: 2),
-                        ),
-                        padding: EdgeInsets.all(10),
+                  elevation: 5,
+                  margin: EdgeInsets.symmetric(vertical: 8, horizontal: 15),
+                  child: ListTile(
+                    leading: CircleAvatar(
+                      radius: 35,
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: FittedBox(
+                            child: Text(
+                                "\$${_userTransactions[index].amount.toStringAsFixed(2)}")),
                       ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(_userTransactions[index].title,
-                              style: Theme.of(context).textTheme.titleMedium),
-                          Text(
-                            // using intl package
-                            DateFormat.yMMMMEEEEd()
-                                .format(_userTransactions[index].date),
-                            style: TextStyle(color: Colors.grey),
-                          )
-                        ],
-                      )
-                    ],
+                    ),
+                    title: Text(
+                      "${_userTransactions[index].title}",
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                    subtitle: Text(DateFormat.yMMMEd()
+                        .format(_userTransactions[index].date)),
+                    trailing: IconButton(
+                      icon: Icon(
+                        Icons.delete,
+                        size: 30,
+                        color: Theme.of(context).errorColor,
+                      ),
+                      onPressed: () => delete(_userTransactions[index].id),
+                    ),
                   ),
                 );
               },

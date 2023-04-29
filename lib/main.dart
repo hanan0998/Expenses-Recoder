@@ -16,9 +16,10 @@ class MyApp extends StatelessWidget {
           // it gives shading to different widgets
           primarySwatch: Colors.green,
           fontFamily: 'Quicksand',
+          // errorColor: ,
           textTheme: TextTheme(
               titleMedium: TextStyle(
-                  fontSize: 16.5,
+                  fontSize: 18,
                   fontFamily: 'OpenSans',
                   fontWeight: FontWeight.bold)),
           appBarTheme: AppBarTheme(
@@ -65,12 +66,12 @@ class _MyHomePageState extends State<MyHomePage> {
     }).toList(growable: true);
   }
 
-  void _newTransaction(String txTitle, double txAmount) {
+  void _newTransaction(String txTitle, double txAmount, DateTime selectedDate) {
     final newtx = Transactions(
       id: DateTime.now().toString(),
       title: txTitle,
       amount: txAmount,
-      date: DateTime.now(),
+      date: selectedDate,
     );
     setState(() {
       _userTranactions.add(newtx);
@@ -88,6 +89,12 @@ class _MyHomePageState extends State<MyHomePage> {
         });
   }
 
+  void _deleteTransaction(String id) {
+    setState(() {
+      _userTranactions.removeWhere((element) => element.id == id);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     print(chartGivingTransactions);
@@ -100,7 +107,7 @@ class _MyHomePageState extends State<MyHomePage> {
             onPressed: () => _startAddNewTransaction(context),
             icon: Icon(Icons.add),
             iconSize: 32,
-          )
+          ),
         ],
       ),
       body: SingleChildScrollView(
@@ -109,7 +116,7 @@ class _MyHomePageState extends State<MyHomePage> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             ChartWidget(chartGivingTransactions),
-            TranactionWidget(_userTranactions),
+            TranactionWidget(_userTranactions, _deleteTransaction),
           ],
         ),
       ),
