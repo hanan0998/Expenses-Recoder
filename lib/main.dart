@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import './widgets/transaction_widget.dart';
 import './widgets/new_transaction.dart';
 import './models/transactions.dart';
+import './widgets/chart_widget.dart';
 
 void main() => runApp(MyApp());
 
@@ -56,6 +57,14 @@ class _MyHomePageState extends State<MyHomePage> {
     // ),
   ];
 
+  List<Transactions> get chartGivingTransactions {
+    return _userTranactions.where((element) {
+      return element.date.isAfter(DateTime.now().subtract(
+        Duration(days: 7),
+      ));
+    }).toList(growable: true);
+  }
+
   void _newTransaction(String txTitle, double txAmount) {
     final newtx = Transactions(
       id: DateTime.now().toString(),
@@ -81,6 +90,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    print(chartGivingTransactions);
     return Scaffold(
       appBar: AppBar(
         title: Text('Personal Expenses'),
@@ -98,14 +108,7 @@ class _MyHomePageState extends State<MyHomePage> {
           // mainAxisAlignment: MainAxisAlignment.spaceAround,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Container(
-              width: double.infinity,
-              child: Card(
-                color: Theme.of(context).primaryColor,
-                child: Text('CHART!'),
-                elevation: 5,
-              ),
-            ),
+            ChartWidget(chartGivingTransactions),
             TranactionWidget(_userTranactions),
           ],
         ),
