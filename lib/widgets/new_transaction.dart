@@ -1,5 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'dart:io';
 
 // it is very important to convert it into statefull widget
 class NewTransaction extends StatefulWidget {
@@ -92,12 +94,20 @@ class _NewTransactionState extends State<NewTransaction> {
                     SizedBox(
                       width: 10,
                     ),
-                    TextButton(
-                        onPressed: _presentDatePicker,
-                        child: Text(
-                          "Choose Date",
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ))
+                    // Adding Cuptertino Button for Ios devices
+                    Platform.isIOS
+                        ? CupertinoButton(
+                            onPressed: _presentDatePicker,
+                            child: Text(
+                              "Choose Date",
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ))
+                        : TextButton(
+                            onPressed: _presentDatePicker,
+                            child: Text(
+                              "Choose Date",
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ))
                   ],
                 ),
                 ElevatedButton(
