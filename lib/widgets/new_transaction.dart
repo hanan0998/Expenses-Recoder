@@ -52,55 +52,62 @@ class _NewTransactionState extends State<NewTransaction> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: Container(
-        padding: EdgeInsets.all(10),
-        child: Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: <Widget>[
-              TextField(
-                decoration: InputDecoration(labelText: 'Title'),
-                // to save value
-                // onChanged: (val) {
-                //   titleInput = val;
-                // },
-                controller: _titleController,
-              ),
-              TextField(
-                decoration: InputDecoration(labelText: 'Amount'),
-                // both controller and onchange are to do same work
-                controller: _amountController,
-                keyboardType: TextInputType.numberWithOptions(decimal: true),
-                // taking string in _ which is naming convention which means take the argument but dont't care
-                onSubmitted: (_) => submitedData(),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(_selectedDate == null
-                      ? "No Date Chosen!"
-                      : "Picked Date: ${DateFormat.yMd().format(_selectedDate)}"),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  TextButton(
-                      onPressed: _presentDatePicker,
-                      child: Text(
-                        "Choose Date",
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ))
-                ],
-              ),
-              ElevatedButton(
-                onPressed: () => submitedData(),
-                child: Text("Add Transaction"),
-                style: TextButton.styleFrom(
-                    backgroundColor: Theme.of(context).primaryColor),
-              )
-            ]),
+    return SingleChildScrollView(
+      child: Card(
+        child: Container(
+          padding: EdgeInsets.only(
+              top: 10,
+              left: 10,
+              right: 10,
+              // giving 10 pixel more padding to to  jump form one field to other easily
+              bottom: MediaQuery.of(context).viewInsets.bottom + 10),
+          child: Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: <Widget>[
+                TextField(
+                  decoration: InputDecoration(labelText: 'Title'),
+                  // to save value
+                  // onChanged: (val) {
+                  //   titleInput = val;
+                  // },
+                  controller: _titleController,
+                ),
+                TextField(
+                  decoration: InputDecoration(labelText: 'Amount'),
+                  // both controller and onchange are to do same work
+                  controller: _amountController,
+                  keyboardType: TextInputType.numberWithOptions(decimal: true),
+                  // taking string in _ which is naming convention which means take the argument but dont't care
+                  onSubmitted: (_) => submitedData(),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(_selectedDate == null
+                        ? "No Date Chosen!"
+                        : "Picked Date: ${DateFormat.yMd().format(_selectedDate)}"),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    TextButton(
+                        onPressed: _presentDatePicker,
+                        child: Text(
+                          "Choose Date",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ))
+                  ],
+                ),
+                ElevatedButton(
+                  onPressed: () => submitedData(),
+                  child: Text("Add Transaction"),
+                  style: TextButton.styleFrom(
+                      backgroundColor: Theme.of(context).primaryColor),
+                )
+              ]),
+        ),
       ),
     );
   }
