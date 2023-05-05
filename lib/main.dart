@@ -1,10 +1,24 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import './widgets/transaction_widget.dart';
 import './widgets/new_transaction.dart';
 import './models/transactions.dart';
 import './widgets/chart_widget.dart';
+// contain  systemChrome class
+import 'package:flutter/services.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  // necessary to intialilze flutter binding
+  WidgetsFlutterBinding.ensureInitialized();
+  // giving list PrefferedOrientations Layout
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitDown,
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.landscapeLeft,
+    DeviceOrientation.landscapeRight
+  ]);
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   @override
@@ -62,6 +76,8 @@ class _MyHomePageState extends State<MyHomePage> {
     // ),
   ];
 
+  bool _showchart = false;
+
   List<Transactions> get chartGivingTransactions {
     return _userTranactions.where((element) {
       return element.date.isAfter(DateTime.now().subtract(
@@ -101,27 +117,73 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    print(chartGivingTransactions);
+    // checking is it landscape mode
+    final isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
+    final appbar = AppBar(
+      title: Text('Personal Expenses'),
+      //adding button to app bar
+      actions: <Widget>[
+        IconButton(
+          onPressed: () => _startAddNewTransaction(context),
+          icon: Icon(Icons.add),
+          iconSize: 32,
+        ),
+      ],
+    );
+    final Transactionscontainer = Container(
+        height: (MediaQuery.of(context).size.height -
+                appbar.preferredSize.height -
+                MediaQuery.of(context).padding.top) *
+            0.6,
+        child: TranactionWidget(_userTranactions, _deleteTransaction));
+
+    final chartcontainer = Container(
+        height: (MediaQuery.of(context).size.height -
+                appbar.preferredSize.height -
+                MediaQuery.of(context).padding.top) *
+            0.4,
+        child: ChartWidget(chartGivingTransactions));
+    // print(chartGivingTransactions);
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Personal Expenses'),
-        //adding button to app bar
-        actions: <Widget>[
-          IconButton(
-            onPressed: () => _startAddNewTransaction(context),
-            icon: Icon(Icons.add),
-            iconSize: 32,
-          ),
-        ],
-      ),
+      appBar: appbar,
       body: SingleChildScrollView(
         child: Column(
           // mainAxisAlignment: MainAxisAlignment.spaceAround,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            ChartWidget(chartGivingTransactions),
-            TranactionWidget(_userTranactions, _deleteTransaction),
+            if (isLandscape)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text('Show Chart'),
+                  Switch(
+                      value: _showchart,
+                      onChanged: (val) {
+                        setState(() {
+                          _showchart = val;
+                        });
+                      })
+                ],
+              ),
+            if (isLandscape)
+              _showchart
+                  ? Container(
+                      height: (MediaQuery.of(context).size.height -
+                              appbar.preferredSize.height -
+                              MediaQuery.of(context).padding.top) *
+                          1,
+                      child: ChartWidget(chartGivingTransactions))
+                  : Container(
+                      height: (MediaQuery.of(context).size.height -
+                              appbar.preferredSize.height -
+                              MediaQuery.of(context).padding.top) *
+                          0.6,
+                      child: TranactionWidget(
+                          _userTranactions, _deleteTransaction)),
+            if (!isLandscape) chartcontainer,
+            if (!isLandscape) Transactionscontainer
           ],
         ),
       ),

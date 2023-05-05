@@ -77,35 +77,32 @@ class _ChartWidgetState extends State<ChartWidget> {
     // print(name.substring(0, 1));
     return Card(
       elevation: 5,
-      margin: EdgeInsets.all(16),
-      child: Container(
-          height: 350,
-          child: widget.recentTransaction.isNotEmpty
-              ? SfCircularChart(
-                  tooltipBehavior: _tooltipBehavior,
-                  legend: Legend(isVisible: true),
-                  title: ChartTitle(
-                      text: "Weekly Expense Chart - USD\$",
-                      textStyle: TextStyle(fontWeight: FontWeight.bold)),
-                  series: <CircularSeries>[
-                    PieSeries<ChartRequiredFields, String>(
-                        dataSource: _listChartData,
-                        xValueMapper: (ChartRequiredFields data, _) => data.day,
-                        yValueMapper: (ChartRequiredFields data, _) =>
-                            data.amount,
-                        dataLabelSettings: DataLabelSettings(
-                          isVisible: true,
-                        ),
-                        enableTooltip: true),
-                  ],
-                )
-              : Center(
-                  child: Text(
-                    "Welcome to Expenses Recorder App!\n\nHere you can record all your transactions and    payments safely. It can change your data into Charts with better understanding experience",
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.titleSmall,
-                  ),
-                )),
+      margin: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+      child: widget.recentTransaction.isNotEmpty
+          ? SfCircularChart(
+              tooltipBehavior: _tooltipBehavior,
+              legend: Legend(isVisible: true),
+              title: ChartTitle(
+                  text: "Weekly Expense Chart - USD\$",
+                  textStyle: TextStyle(fontWeight: FontWeight.bold)),
+              series: <CircularSeries>[
+                PieSeries<ChartRequiredFields, String>(
+                    dataSource: _listChartData,
+                    xValueMapper: (ChartRequiredFields data, _) => data.day,
+                    yValueMapper: (ChartRequiredFields data, _) => data.amount,
+                    dataLabelSettings: DataLabelSettings(
+                      isVisible: true,
+                    ),
+                    enableTooltip: true),
+              ],
+            )
+          : Center(
+              child: Text(
+                "Welcome to Expenses Recorder App!\n\nHere you can record all your transactions and    payments safely. It can change your data into Charts with better understanding experience",
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.titleSmall,
+              ),
+            ),
     );
   }
 }
