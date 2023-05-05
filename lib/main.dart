@@ -21,7 +21,11 @@ class MyApp extends StatelessWidget {
               titleMedium: TextStyle(
                   fontSize: 18,
                   fontFamily: 'OpenSans',
-                  fontWeight: FontWeight.bold)),
+                  fontWeight: FontWeight.bold),
+              titleSmall: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                  fontFamily: 'OpenSans')),
           appBarTheme: AppBarTheme(
               titleTextStyle: TextStyle(
                   fontFamily: 'OpenSans',
@@ -63,7 +67,7 @@ class _MyHomePageState extends State<MyHomePage> {
       return element.date.isAfter(DateTime.now().subtract(
         Duration(days: 7),
       ));
-    }).toList(growable: true);
+    }).toList();
   }
 
   void _newTransaction(String txTitle, double txAmount, DateTime selectedDate) {
@@ -114,6 +118,7 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           // mainAxisAlignment: MainAxisAlignment.spaceAround,
           crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             ChartWidget(chartGivingTransactions),
             TranactionWidget(_userTranactions, _deleteTransaction),
