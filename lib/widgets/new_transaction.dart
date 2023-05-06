@@ -7,13 +7,43 @@ import 'dart:io';
 class NewTransaction extends StatefulWidget {
   // we use contructor in the stateful widget not in state class
   final Function addTransaction;
-  NewTransaction(this.addTransaction);
+  NewTransaction(this.addTransaction) {
+    print("Constructor NewTransaction");
+  }
 
   @override
-  State<NewTransaction> createState() => _NewTransactionState();
+  State<NewTransaction> createState() {
+    print("CreatState()");
+    return _NewTransactionState();
+  }
 }
 
 class _NewTransactionState extends State<NewTransaction> {
+  // we can also make constructor of the state class
+  // for information of Widget LifeCycle
+  _NewTransactionState() {
+    print("Constructor _NewTransactionState");
+  }
+// for information of Widget LifeCycle
+  @override
+  void initState() {
+    print("initState()");
+    super.initState();
+  }
+
+// for information of Widget LifeCycle
+  @override
+  void didUpdateWidget(covariant NewTransaction oldWidget) {
+    print("didUpdatewidget()");
+    super.didUpdateWidget(oldWidget);
+  } // for information of Widget LifeCycle
+
+  @override
+  void dispose() {
+    print("dispose()");
+    super.dispose();
+  }
+
   String titleInput;
 
   final _titleController = TextEditingController();

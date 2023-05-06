@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_complete_guide/models/transactions.dart';
-import 'package:intl/intl.dart';
+import './TransactionListWidget.dart';
 
 class TranactionWidget extends StatelessWidget {
   final List<Transactions> _userTransactions;
@@ -39,47 +39,11 @@ class TranactionWidget extends StatelessWidget {
               },
             )
           : ListView.builder(
-              itemBuilder: (context, index) {
+              itemBuilder: (context, _index) {
                 // Transactions tx = _userTransactions[index];
-                return Card(
-                  elevation: 5,
-                  margin: EdgeInsets.symmetric(vertical: 8, horizontal: 15),
-                  child: ListTile(
-                    leading: CircleAvatar(
-                      radius: 35,
-                      child: Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: FittedBox(
-                            child: Text(
-                                "\$${_userTransactions[index].amount.toStringAsFixed(2)}")),
-                      ),
-                    ),
-                    title: Text(
-                      "${_userTransactions[index].title}",
-                      style: Theme.of(context).textTheme.titleMedium,
-                    ),
-                    subtitle: Text(DateFormat.yMMMEd()
-                        .format(_userTransactions[index].date)),
-                    trailing: MediaQuery.of(context).size.width > 500
-                        ? TextButton.icon(
-                            onPressed: () =>
-                                delete(_userTransactions[index].id),
-                            icon: Icon(
-                              Icons.delete,
-                              size: 30,
-                              color: Theme.of(context).errorColor,
-                            ),
-                            label: Text("Delete"))
-                        : IconButton(
-                            icon: Icon(
-                              Icons.delete,
-                              size: 30,
-                              color: Theme.of(context).errorColor,
-                            ),
-                            onPressed: () =>
-                                delete(_userTransactions[index].id),
-                          ),
-                  ),
+                return TransactionListWidget(
+                  userTransaction: _userTransactions[_index],
+                  delete: delete,
                 );
               },
               itemCount: _userTransactions.length,

@@ -119,6 +119,22 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  Widget _showLandscapeContent() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Text('Show Chart'),
+        Switch(
+            value: _showchart,
+            onChanged: (val) {
+              setState(() {
+                _showchart = val;
+              });
+            })
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
@@ -170,20 +186,7 @@ class _MyHomePageState extends State<MyHomePage> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            if (isLandscape)
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text('Show Chart'),
-                  Switch(
-                      value: _showchart,
-                      onChanged: (val) {
-                        setState(() {
-                          _showchart = val;
-                        });
-                      })
-                ],
-              ),
+            if (isLandscape) _showLandscapeContent(),
             if (isLandscape)
               _showchart
                   ? Container(
