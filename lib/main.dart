@@ -32,17 +32,20 @@ class MyApp extends StatelessWidget {
       title: 'Personal Expenses',
       theme: ThemeData(
           // it gives shading to different widgets
-          primarySwatch: Colors.green,
+          primarySwatch: Colors.cyan,
           fontFamily: 'Quicksand',
+
           // errorColor: ,
           textTheme: TextTheme(
               titleMedium: TextStyle(
                   fontSize: 18,
                   fontFamily: 'OpenSans',
+                  color: Colors.black,
                   fontWeight: FontWeight.bold),
               titleSmall: TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.w600,
+                  color: Colors.white,
                   fontFamily: 'OpenSans')),
           appBarTheme: AppBarTheme(
               titleTextStyle: TextStyle(
@@ -59,10 +62,11 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  String titleInput;
+// here we extends our _MyHomePageState with MyHomePage and with WidgetBindingObserver
+class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
+  late String titleInput;
 
-  String amountInput;
+  late String amountInput;
 
   final titlecontroller = TextEditingController();
   final List<Transactions> _userTranactions = [
@@ -79,6 +83,28 @@ class _MyHomePageState extends State<MyHomePage> {
     //   date: DateTime.now(),
     // ),
   ];
+// method in WidgetBindingObserver
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    print(state);
+    super.didChangeAppLifecycleState(state);
+  }
+
+// to add the observer when the app run
+  @override
+  void initState() {
+    // adding the observer when the widget build for the first time
+    WidgetsBinding.instance.addObserver(this);
+    super.initState();
+  }
+
+// to remove the observer when the app inactive, pause
+  @override
+  void dispose() {
+    // to remove the observerr when the widget is disposed
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
 
   bool _showchart = false;
 
@@ -104,6 +130,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _startAddNewTransaction(BuildContext ctx) {
     showModalBottomSheet(
+        // backgroundColor: Colors.black
         context: ctx,
         builder: (_) {
           return GestureDetector(
@@ -140,32 +167,17 @@ class _MyHomePageState extends State<MyHomePage> {
     final mediaQuery = MediaQuery.of(context);
     // checking is it landscape mode
     final isLandscape = mediaQuery.orientation == Orientation.landscape;
-    final PreferredSizeWidget appbar = Platform.isIOS
-        ? CupertinoNavigationBar(
-            // to add title
-            middle: Text("Expense Recoder"),
-            // to add action button
-            trailing: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                GestureDetector(
-                  onTap: () => _startAddNewTransaction(context),
-                  child: Icon(CupertinoIcons.add),
-                )
-              ],
-            ),
-          )
-        : AppBar(
-            title: Text('Personal Expenses'),
-            //adding button to app bar
-            actions: <Widget>[
-              IconButton(
-                onPressed: () => _startAddNewTransaction(context),
-                icon: Icon(Icons.add),
-                iconSize: 32,
-              ),
-            ],
-          );
+    final PreferredSizeWidget appbar = AppBar(
+      title: Text('Personal Expenses'),
+      //adding button to app bar
+      actions: <Widget>[
+        IconButton(
+          onPressed: () => _startAddNewTransaction(context),
+          icon: Icon(Icons.add),
+          iconSize: 32,
+        ),
+      ],
+    );
     final Transactionscontainer = Container(
         height: (mediaQuery.size.height -
                 appbar.preferredSize.height -
@@ -181,50 +193,51 @@ class _MyHomePageState extends State<MyHomePage> {
         child: ChartWidget(chartGivingTransactions));
     final pagebody = SafeArea(
       child: SingleChildScrollView(
-        child: Column(
-          // mainAxisAlignment: MainAxisAlignment.spaceAround,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            if (isLandscape) _showLandscapeContent(),
-            if (isLandscape)
-              _showchart
-                  ? Container(
-                      height: (mediaQuery.size.height -
-                              appbar.preferredSize.height -
-                              mediaQuery.padding.top) *
-                          1,
-                      child: ChartWidget(chartGivingTransactions))
-                  : Container(
-                      height: (mediaQuery.size.height -
-                              appbar.preferredSize.height -
-                              mediaQuery.padding.top) *
-                          0.6,
-                      child: TranactionWidget(
-                          _userTranactions, _deleteTransaction)),
-            if (!isLandscape) chartcontainer,
-            if (!isLandscape) Transactionscontainer
-          ],
+        child: Container(
+          height: mediaQuery.size.height,
+          decoration: BoxDecoration(
+              image: DecorationImage(
+                  image: AssetImage('assets/images/sky.jpg'),
+                  fit: BoxFit.cover)),
+          child: Column(
+            // mainAxisAlignment: MainAxisAlignment.spaceAround,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              if (isLandscape) _showLandscapeContent(),
+              if (isLandscape)
+                _showchart
+                    ? Container(
+                        height: (mediaQuery.size.height -
+                                appbar.preferredSize.height -
+                                mediaQuery.padding.top) *
+                            1,
+                        child: ChartWidget(chartGivingTransactions))
+                    : Container(
+                        height: (mediaQuery.size.height -
+                                appbar.preferredSize.height -
+                                mediaQuery.padding.top) *
+                            0.6,
+                        child: TranactionWidget(
+                            _userTranactions, _deleteTransaction)),
+              if (!isLandscape) chartcontainer,
+              if (!isLandscape) Transactionscontainer
+            ],
+          ),
         ),
       ),
     );
     // print(chartGivingTransactions);
-    return Platform.isIOS
-        ? CupertinoPageScaffold(
-            child: pagebody,
-            navigationBar: appbar,
-          )
-        : Scaffold(
-            appBar: appbar,
-            body: pagebody,
-            floatingActionButton: Platform.isIOS
-                ? Container()
-                : FloatingActionButton(
-                    child: Icon(Icons.add),
-                    onPressed: () => _startAddNewTransaction(context),
-                  ),
-            floatingActionButtonLocation:
-                FloatingActionButtonLocation.centerFloat,
-          );
+    return Scaffold(
+      appBar: appbar,
+      body: pagebody,
+      floatingActionButton: Platform.isIOS
+          ? Container()
+          : FloatingActionButton(
+              child: Icon(Icons.add),
+              onPressed: () => _startAddNewTransaction(context),
+            ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+    );
   }
 }

@@ -8,8 +8,8 @@ class Transactions {
   double amount;
   DateTime date;
   Transactions(
-      {@required this.id,
-      @required this.title,
-      @required this.amount,
-      @required this.date});
+      {required this.id,
+      required this.title,
+      required this.amount,
+      required this.date});
 }

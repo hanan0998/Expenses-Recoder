@@ -21,9 +21,9 @@ class NewTransaction extends StatefulWidget {
 class _NewTransactionState extends State<NewTransaction> {
   // we can also make constructor of the state class
   // for information of Widget LifeCycle
-  _NewTransactionState() {
-    print("Constructor _NewTransactionState");
-  }
+  // _NewTransactionState() {
+  //   print("Constructor _NewTransactionState");
+  // }
 // for information of Widget LifeCycle
   @override
   void initState() {
@@ -44,12 +44,12 @@ class _NewTransactionState extends State<NewTransaction> {
     super.dispose();
   }
 
-  String titleInput;
+  late String titleInput;
 
   final _titleController = TextEditingController();
 
   final _amountController = TextEditingController();
-  DateTime _selectedDate;
+  late DateTime _selectedDate = DateTime.now();
 
   void submitedData() {
     if (_amountController == null) {
@@ -86,6 +86,7 @@ class _NewTransactionState extends State<NewTransaction> {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Card(
+        // color: Colors.transparent,
         child: Container(
           padding: EdgeInsets.only(
               top: 10,
@@ -108,6 +109,7 @@ class _NewTransactionState extends State<NewTransaction> {
                   decoration: InputDecoration(labelText: 'Amount'),
                   // both controller and onchange are to do same work
                   controller: _amountController,
+
                   keyboardType: TextInputType.numberWithOptions(decimal: true),
                   // taking string in _ which is naming convention which means take the argument but dont't care
                   onSubmitted: (_) => submitedData(),

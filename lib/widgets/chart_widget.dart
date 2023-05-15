@@ -66,7 +66,7 @@ class _ChartWidgetState extends State<ChartWidget> {
 
   double get maxSpending {
     return groupedTransactionValues.fold(0.0, (sum, element) {
-      return sum + element['amount'];
+      return sum + (element['amount'] as num);
     });
   }
 
@@ -76,7 +76,8 @@ class _ChartWidgetState extends State<ChartWidget> {
     // print(groupedTransactionValues);
     // print(name.substring(0, 1));
     return Card(
-      elevation: 5,
+      color: Colors.transparent,
+      elevation: 7,
       margin: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
       child: widget.recentTransaction.isNotEmpty
           ? SfCircularChart(
